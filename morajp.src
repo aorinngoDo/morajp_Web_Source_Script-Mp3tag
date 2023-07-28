@@ -1,0 +1,148 @@
+#####   Search by dialog   #####
+Debug "on" "C:\Users\winme\Documents\Git\morajp_Web_Source_Script-Mp3tag\debug.log"
+[Name]=mora.jp
+[BasedOn]=https://mora.jp/
+[IndexUrl]=https://mora.jp/search/getResult?keyWord=%s
+[WordSeparator]=%20
+[IndexFormat]=%_url%|%_preview%|%Album%|%Artist%|%Year%|%Tracks%
+[Encoding]=url-utf-8
+[SearchBy]=%artist% %album%
+
+
+#####   List of search results   #####
+[ParserScriptIndex]=...
+
+json "on"
+json_select_object "data"
+json_select_object "packageResult"
+
+json_select "total"
+
+IfNot "0"
+    json_foreach "list"
+
+        # Album info json URL
+        json_select "packageUrl"
+        SayRest
+        Say "packageMeta.json"
+        Say "|"
+
+        # Album preview URL
+        json_select "packagePage"
+        SayRest
+        Say "|"
+
+        # Album title
+        json_select "packageTitle"
+        SayRest
+        Say "|"
+
+        # Artist name
+        json_select "artistName"
+        SayRest
+        Say "|"
+
+        # Year (Date)
+        json_select "startDate"
+        SayRest
+        Say "|"
+
+        # Track count
+        json_select "packageTrack"
+        SayRest
+
+        # End of line
+        SayNewline
+
+    json_foreach_end
+Endif
+
+
+#####   Album info   #####
+[ParserScriptAlbum]=...
+
+json "on"
+
+### Common info ###
+
+# Album title
+OutputTo "ALBUM"
+json_select "title"
+SayRest
+
+# Album artist
+OutputTo "ALBUMARTIST"
+json_select "artistName"
+SayRest
+
+# Album year
+OutputTo "YEAR"
+json_select "startDate"
+
+# If you want to use only year (YYYY) in the "YEAR" field, use this:
+SayRegexp "^[0-9]{4}"
+
+# If you want to use the release date (YYYY/MM/DD hh:mm:ss) in the "YEAR" field, use this instead:
+# SayRest
+
+# Album cover image
+OutputTo "COVERURL"
+json_select "packageUrl"
+SayRest
+json_select "fullsizeimage"
+SayRest
+
+# Publisher
+OutputTo "PUBLISHER"
+json_select "labelcompanyname"
+SayRest
+
+
+### Track info loop ###
+
+json_foreach "trackList"
+
+    # Track number
+    OutputTo "TRACK"
+    json_select "trackNo"
+    SayRest
+    Say "|"
+
+    # Length
+    OutputTo "_LENGTH"
+    json_select "duration"
+    SayRest
+    Say "000"
+    Say "|"
+
+    # Track title
+    OutputTo "TRACKS"
+    json_select "title"
+    SayRest
+    Say "|"
+
+    # Artist name
+    OutputTo "ARTIST"
+    json_select "artistName"
+    SayRest
+    Say "|"
+
+    # Arranger
+    OutputTo "ARRANGER"
+    json_select "arranger"
+    SayRest
+    Say "|"
+
+    # Composer
+    OutputTo "COMPOSER"
+    json_select "composer"
+    SayRest
+    Say "|"
+
+    # Lyricist
+    OutputTo "LYRICIST"
+    json_select "lyrics"
+    SayRest
+    Say "|"
+
+json_foreach_end
