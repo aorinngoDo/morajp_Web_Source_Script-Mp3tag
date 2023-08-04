@@ -1,5 +1,4 @@
 #####   Search by dialog   #####
-Debug "on" "C:\Users\winme\Documents\Git\morajp_Web_Source_Script-Mp3tag\debug.log"
 [Name]=mora.jp
 [BasedOn]=https://mora.jp/
 [IndexUrl]=https://mora.jp/search/getResult?keyWord=%s
